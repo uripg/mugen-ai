@@ -116,6 +116,24 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   Tool takes `productContext` from caller (pipeline decides the demo
   vendor's one-liner — T-007 note).
 
+- 2026-07-09 · **Human directive: maximum iteration speed** (supersedes LOOP.md
+  STEP 6/7 cadence and the earlier testing-reduction amendment; human-authorized):
+  1. **Reviewer skipped by default.** Independent review (`reviewer-verify.sh`) is
+     required ONLY for diffs touching auth/secrets, real spend, or irreversible
+     data operations. Everything else — including schema changes, new deps, and
+     non-trivial logic — skips with `skipped — speed directive 2026-07-09` in the
+     ticket; no per-ticket justification debate. Consultation stays optional.
+  2. **Testing cut further.** Per-ticket gate = `bun run typecheck` only. `lint` +
+     `build` run at deploy time, not per ticket. Live-exercise only the primary
+     happy path, and only for tickets that spend money or ship the pipeline.
+  3. **Multiple agents per ticket.** Split each ticket into disjoint sub-tasks and
+     implement them with parallel subagents (worktree isolation when file
+     footprints could collide; LOOP-SPRINT §6 mechanics apply inside the main
+     loop). Orchestrator session merges, typechecks, commits. Independent tickets
+     may also run concurrently as waves.
+  Unchanged: CONSTRAINTS.md, AGENTS.md §1 invariants and §5 human-only decisions,
+  never-guess (§0), commit-per-ticket checkpointing.
+
 ## Blocking questions (awaiting the human)
 
 **Non-blocking items for the human (build continues):**
