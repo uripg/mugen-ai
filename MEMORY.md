@@ -19,8 +19,10 @@ loop starts at T-001 (unblocked: T-001, T-002, T-003 need no pending answers).
 
 ## Active ticket
 
-T-001 **done** (deployed live at mugen-ai.kedalen.dev, review skipped — infra
-wiring only, reason logged in ticket). Next: **T-002** (Better Auth login).
+T-002 **done** (reviewer PASS after 2 fix rounds + 1 accepted rebuttal). Login
+live at mugen-ai.kedalen.dev: shared credential in `.dev.vars`
+(TEAM_LOGIN_EMAIL/PASSWORD), signup closed (`ALLOW_SIGNUP` var), session-gated
+dashboard shell. Next: **T-003** (app D1 schema).
 
 ## Decisions log
 
@@ -66,13 +68,10 @@ wiring only, reason logged in ticket). Next: **T-002** (Better Auth login).
 ## Blocking questions (awaiting the human)
 
 <!-- Q-N · <question, why it blocks, options, recommendation> · asked <date> -->
-- **Q-1 (remainder) · Sillage + FullEnrich keys.** Human said keys live in
-  `.dev.vars`, but it currently contains only `CLAUDE_API_KEY` and
-  `BETTER_AUTH_SECRET` — no Sillage or FullEnrich key yet. Please add
-  `SILLAGE_API_KEY` and `FULLENRICH_API_KEY` to `.dev.vars`. Blocks: the
-  `get_signals` / `enrich_contact` tool tickets (testing against real APIs); also
-  note prod deploys of the pipeline need the same values set via
-  `wrangler secret put`. · asked 2026-07-09
+- ~~Q-1 (remainder)~~ **RESOLVED 2026-07-09**: human added `SILLAGE_API_KEY` and
+  `FULLENRICH_API_KEY` to `.dev.vars` during T-002. Prod `wrangler secret put`
+  still pending (QUESTIONS.md Q-1 item 3 preference unanswered — agent will set
+  them when the pipeline deploys unless told otherwise).
 - **Q-3 · Playbook content (pending, human said).** Team-authored JP/KR/SG
   cultural buying-process notes, buyer psychology notes, committee-role
   heuristics + one generic fallback line per market. Blocks: the Deal Intelligence

@@ -15,6 +15,9 @@
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
+	"vars": {
+		"ALLOW_SIGNUP": "false"
+	},
 	"routes": [
 		{
 			"pattern": "mugen-ai.kedalen.dev",
@@ -25,7 +28,8 @@
 		{
 			"binding": "DB",
 			"database_name": "mugen-ai-db",
-			"database_id": "38b857d6-8807-41f9-8e9e-adf49ad35086"
+			"database_id": "38b857d6-8807-41f9-8e9e-adf49ad35086",
+			"migrations_dir": "drizzle"
 		}
 	],
 	"kv_namespaces": [
