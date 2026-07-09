@@ -11,16 +11,18 @@
 `SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` (amended twice by human
 decision: testing reduced; shadcn-exclusive UI).
 
-**Board:** T-001..T-006, T-014 **done** · T-007..T-013 todo.
+**Board:** T-001..T-007, T-014 **done** · T-008..T-013 todo.
 Playbooks (Q-3) transcribed to `src/lib/playbooks/`. App live at
 https://mugen-ai.kedalen.dev behind the shared team login.
 
 ## Active ticket
 
-None in progress. **Next: T-007 (core headless pipeline — SG).** All three
-tools (get_signals / enrich_contact / research_market) are done and
-live-verified; T-007's blockers (Q-1 keys + spend, Q-4 SG company) are
-resolved. After that: T-008 dashboard.
+None in progress. **Next: T-008 (dashboard v1).** The core pipeline is live:
+`POST /api/pipeline/run {accountId}` on mugen-ai.kedalen.dev (auth-gated,
+NDJSON heartbeat stream, result also durable in D1 `pipeline_runs`). T-008
+notes: poll `pipeline_runs`/`leads`; the run survives client disconnects, so
+fire-and-poll is safe; lead stages now include `no-contact` (render "no
+verified contact" from `leads.stage_detail`).
 Note for T-010: the human playbooks use committee-role labels beyond the
 contacts.committeeRole enum (strategic evaluator, commercial evaluator/gatekeeper,
 market-entry scout, senior sponsor) — extend the enum or map at intel time.
@@ -134,6 +136,21 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   Unchanged: CONSTRAINTS.md, AGENTS.md §1 invariants and §5 human-only decisions,
   never-guess (§0), commit-per-ticket checkpointing.
 
+- 2026-07-09 · **T-007 done** (review skipped — speed directive; built by 2
+  parallel subagents). Core pipeline live end-to-end on the deployed Worker:
+  Claude tool-use loop (`claude-opus-4-8`; get_signals / select_signal /
+  web_search / enrich_contact / write_draft; bounds 16 turns / 8 searches /
+  2 paid enrichments) behind auth-gated `POST /api/pipeline/run`. Prod run on
+  Nium: Malta-MLRO hiring signal → web-searched exec verified via FullEnrich
+  (HIGH_PROBABILITY, stored verified=0) → playbook-framed English draft, lead
+  `drafted/draft`. Key fixes: web_search_20260209 pause_turn resume must pass
+  `container` id (else 400); edge idle-timeout cuts silent responses → route
+  streams NDJSON heartbeats, and the Worker finishes + persists even if the
+  client drops (per-stage fallback not needed). Demo vendor one-liner =
+  "Kedalen" compliance-tech (src/lib/pipeline/product.ts). Schema: leads.stage
+  +`no-contact`, +`stage_detail` (migration 0004 applied local+remote).
+  Remote D1 got sillage_id backfill for the 5 resolved accounts.
+
 ## Blocking questions (awaiting the human)
 
 **Non-blocking items for the human (build continues):**
@@ -148,6 +165,11 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   removing in the UI. Also the 8 SaaS accounts (Rippling, Asana, …) from
   earlier experiments were replaced on the TAL at ~13:45Z by parties unknown —
   coordinate with teammates so our 12 banks stay on the list.
+- **TAL churn bit us live (T-007):** at ~14:4xZ the live TAL no longer
+  resolved Nium — prod fell back to the cached ids I backfilled (5 of 12
+  accounts: MoneyForward/MUFG/Toss/DBS/Nium). The other 7 accounts have no
+  cached `sillage_id` and will come back `unmapped_account` until they're
+  re-added to the TAL (or you tell me their Sillage company ids to backfill).
 
 <!-- Q-N · <question, why it blocks, options, recommendation> · asked <date> -->
 - ~~Q-1 (remainder)~~ **RESOLVED 2026-07-09**: human added `SILLAGE_API_KEY` and

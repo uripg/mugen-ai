@@ -102,6 +102,9 @@ export const leads = sqliteTable(
 			enum: [
 				"signal",
 				"contact",
+				// Invariant 5: honest terminal stage when FullEnrich found no
+				// verified contact — provenance in stageDetail, never dropped.
+				"no-contact",
 				"intel",
 				"scored",
 				"drafted",
@@ -110,6 +113,9 @@ export const leads = sqliteTable(
 		})
 			.notNull()
 			.default("signal"),
+		// Stage-outcome provenance (e.g. the raw FullEnrich no_verified_contact
+		// result) so the dashboard can render honest empties after refresh.
+		stageDetail: text("stage_detail", { mode: "json" }),
 		status: text("status", {
 			enum: ["draft", "approved", "edited", "sent-simulated"],
 		})

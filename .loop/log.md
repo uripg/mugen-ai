@@ -14,3 +14,4 @@
 2026-07-09 · T-004 · STEP 5-8 · get_signals implemented + verified live (340 detections; DBS/MUFG/Nium/MoneyForward persisted); reviewer FAIL→fix(market guard, live evidence)→PASS · next: T-005 enrich_contact
 2026-07-09 · T-005 · STEP 3-8 · enrich_contact built, FullEnrich v2 verified via docs, live-enriched Nium CEO (verified=true), .dev.vars key fixed + prod secret re-put, reviewer FAIL→PASS · next: T-006 research_market
 2026-07-09 · T-006 · STEP 3-8 · research_market built on @anthropic-ai/sdk + web_search_20260209, live-verified both outcomes on Nium, reviewer PASS · next: T-007 core pipeline SG
+2026-07-09 · T-007 · impl+verify · done — pipeline live on prod (run 449bc46d drafted); review skipped (speed directive); container-id + edge-timeout fixes; sillage_id backfill → remote · next: T-008 dashboard v1
