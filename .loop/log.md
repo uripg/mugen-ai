@@ -12,3 +12,4 @@
 2026-07-09 · Q-4 partial · 12 Sillage accounts seeded to target_accounts (local+remote); signals still queuing · next: T-004/T-005 implementation; live verification once Sillage mapping completes
 2026-07-09 · secrets+spend · human authorized spend; all 4 Worker secrets set via wrangler; HOLD ordered — loop paused before T-004 · next: resume on human go
 2026-07-09 · T-004 · STEP 5-8 · get_signals implemented + verified live (340 detections; DBS/MUFG/Nium/MoneyForward persisted); reviewer FAIL→fix(market guard, live evidence)→PASS · next: T-005 enrich_contact
+2026-07-09 · T-005 · STEP 3-8 · enrich_contact built, FullEnrich v2 verified via docs, live-enriched Nium CEO (verified=true), .dev.vars key fixed + prod secret re-put, reviewer FAIL→PASS · next: T-006 research_market

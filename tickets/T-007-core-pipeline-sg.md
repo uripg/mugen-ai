@@ -37,4 +37,11 @@ start without both, even though T-004/T-005 inherit the same gates.**
 
 ## Notes / Decisions
 
+- From T-005 review (reviewer condition on accepting the scope rebuttal): when
+  `enrich_contact` returns `{ outcome: "no_verified_contact", reason,
+  enrichmentId, rawResult }`, the pipeline MUST persist that outcome durably on
+  the lead/run (e.g. lead stage/status + provenance from `rawResult`) so the
+  dashboard renders "no verified contact" after a refresh (invariant 5) — it is
+  never silently dropped and never turned into an invented contact.
+
 ## Reviewer verdict

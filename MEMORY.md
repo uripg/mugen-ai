@@ -11,14 +11,14 @@
 `SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` (amended twice by human
 decision: testing reduced; shadcn-exclusive UI).
 
-**Board:** T-001..T-004, T-014 **done** · T-005..T-013 todo.
+**Board:** T-001..T-005, T-014 **done** · T-006..T-013 todo.
 Playbooks (Q-3) transcribed to `src/lib/playbooks/`. App live at
 https://mugen-ai.kedalen.dev behind the shared team login.
 
 ## Active ticket
 
-None in progress. **Next: T-005 (enrich_contact — FullEnrich client).** After
-that: T-006 research_market → T-007 core pipeline (SG) → T-008 dashboard.
+None in progress. **Next: T-006 (research_market — Anthropic web_search).**
+After that: T-007 core pipeline (SG) → T-008 dashboard.
 Note for T-010: the human playbooks use committee-role labels beyond the
 contacts.committeeRole enum (strategic evaluator, commercial evaluator/gatekeeper,
 market-entry scout, senior sponsor) — extend the enum or map at intel time.
@@ -86,6 +86,20 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   empty) into LOCAL D1. Notes: Sillage emits duplicate detections per posting
   (dedupe-for-display deferred to T-007/T-008); signal-type coverage today =
   hiring + exec-join only (see open items below).
+
+- 2026-07-09 · **T-005 done** (reviewer FAIL→PASS after 2 fixes + 1 accepted
+  rebuttal). FullEnrich **v2** API verified against docs.fullenrich.com
+  (async: POST bulk → poll GET; Bearer; work_emails = 1 credit). Design:
+  contact row written iff `most_probable_work_email.status ∈ {DELIVERABLE,
+  HIGH_PROBABILITY}` (provider's own tiers), `verified = DELIVERABLE`;
+  no-result → explicit `no_verified_contact` return with raw provenance —
+  **T-007 must persist it on the lead** (note added to T-007; reviewer
+  condition). Bounded polling (24×5s), same-account dedupe avoids re-spend.
+  Live-verified: Nium CEO enriched, DELIVERABLE, row in local D1 (1 credit;
+  balance 2500). **Env fix: `.dev.vars` FULLENRICH_API_KEY line had a missing
+  newline** (key ran into TEAM_LOGIN_EMAIL → 401s); file fixed AND prod Worker
+  secret re-put with the correct value. Q-4's FullEnrich spot-check concern is
+  de-facto answered by the successful live enrichment.
 
 ## Blocking questions (awaiting the human)
 
