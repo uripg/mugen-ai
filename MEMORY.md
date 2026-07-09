@@ -11,14 +11,16 @@
 `SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` (amended twice by human
 decision: testing reduced; shadcn-exclusive UI).
 
-**Board:** T-001..T-005, T-014 **done** · T-006..T-013 todo.
+**Board:** T-001..T-006, T-014 **done** · T-007..T-013 todo.
 Playbooks (Q-3) transcribed to `src/lib/playbooks/`. App live at
 https://mugen-ai.kedalen.dev behind the shared team login.
 
 ## Active ticket
 
-None in progress. **Next: T-006 (research_market — Anthropic web_search).**
-After that: T-007 core pipeline (SG) → T-008 dashboard.
+None in progress. **Next: T-007 (core headless pipeline — SG).** All three
+tools (get_signals / enrich_contact / research_market) are done and
+live-verified; T-007's blockers (Q-1 keys + spend, Q-4 SG company) are
+resolved. After that: T-008 dashboard.
 Note for T-010: the human playbooks use committee-role labels beyond the
 contacts.committeeRole enum (strategic evaluator, commercial evaluator/gatekeeper,
 market-entry scout, senior sponsor) — extend the enum or map at intel time.
@@ -100,6 +102,19 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   newline** (key ran into TEAM_LOGIN_EMAIL → 401s); file fixed AND prod Worker
   secret re-put with the correct value. Q-4's FullEnrich spot-check concern is
   de-facto answered by the successful live enrichment.
+
+- 2026-07-09 · **T-006 done** (reviewer PASS, round 1). `research_market` =
+  `@anthropic-ai/sdk` (installed; ratified dep) + `web_search_20260209`
+  server tool on `claude-opus-4-8`, key passed explicitly as
+  `CLAUDE_API_KEY`. Bounded: max_uses 10 (5 proved too tight — dynamic
+  filtering's failed code-exec attempts consume uses), max 3 pause_turn
+  resumes. Live-observed: _20260209 text blocks carry no span citations →
+  grounding gate = successful web_search_tool_result blocks + consulted
+  source URLs; note = text after last tool block. Both outcomes persist to
+  deal_intel with full raw provenance. Live-verified on Nium: Thunes +
+  Airwallex note w/ 10 sources; none_found path also exercised honestly.
+  Tool takes `productContext` from caller (pipeline decides the demo
+  vendor's one-liner — T-007 note).
 
 ## Blocking questions (awaiting the human)
 
