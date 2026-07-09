@@ -81,7 +81,7 @@ still gated on **Q-3** (playbooks). Board: T-001..T-003 done; T-004..T-013 todo.
   `FULLENRICH_API_KEY` to `.dev.vars` during T-002. Prod `wrangler secret put`
   still pending (QUESTIONS.md Q-1 item 3 preference unanswered — agent will set
   them when the pipeline deploys unless told otherwise).
-- **Q-3 · Playbook content (pending, human said).** Team-authored JP/KR/SG
+- ~~Q-3~~ **RESOLVED 2026-07-09**: playbooks for all three markets supplied in QUESTIONS.md, transcribed verbatim to src/lib/playbooks/{jp,kr,sg}.ts (with sources + fallback lines). Was: Team-authored JP/KR/SG
   cultural buying-process notes, buyer psychology notes, committee-role
   heuristics + one generic fallback line per market. Blocks: the Deal Intelligence
   tickets only. · asked 2026-07-09
