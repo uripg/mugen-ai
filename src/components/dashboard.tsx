@@ -150,35 +150,110 @@ export function Dashboard() {
 		return <p className="text-sm text-muted-foreground">Loading…</p>;
 	}
 
+	// Only companies with actual lead data get full cards; the rest collapse
+	// into a compact "no data yet" strip so the pipeline can still be run.
+	const hasData = (a: Account) => a.leads.length > 0;
+
 	return (
 		<Tabs defaultValue="jp">
 			<TabsList>
 				{MARKETS.map((m) => (
 					<TabsTrigger key={m.key} value={m.key}>
-						{m.label} ({accounts.filter((a) => a.market === m.key).length})
+						{m.label} (
+						{accounts.filter((a) => a.market === m.key && hasData(a)).length})
 					</TabsTrigger>
 				))}
 			</TabsList>
 			{MARKETS.map((m) => {
 				const marketAccounts = accounts.filter((a) => a.market === m.key);
+				const withData = marketAccounts.filter(hasData);
+				const withoutData = marketAccounts.filter((a) => !hasData(a));
 				return (
 					<TabsContent key={m.key} value={m.key} className="space-y-4">
-						{marketAccounts.length === 0 && (
+						{withData.length === 0 && (
 							<p className="text-sm text-muted-foreground">
-								No target accounts in {m.label}.
+								No companies with data in {m.label} yet
+								{withoutData.length > 0
+									? " — run the pipeline on an account below."
+									: "."}
 							</p>
 						)}
-						{marketAccounts.map((account) => (
+						{withData.map((account) => (
 							<AccountCard
 								key={account.id}
 								account={account}
 								onChanged={refresh}
 							/>
 						))}
+						{withoutData.length > 0 && (
+							<NoDataStrip accounts={withoutData} onChanged={refresh} />
+						)}
 					</TabsContent>
 				);
 			})}
 		</Tabs>
+	);
+}
+
+function NoDataStrip({
+	accounts,
+	onChanged,
+}: {
+	accounts: Account[];
+	onChanged: () => void;
+}) {
+	return (
+		<div className="rounded-lg border border-dashed p-3">
+			<p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+				No data yet ({accounts.length})
+			</p>
+			<div className="space-y-1">
+				{accounts.map((account) => {
+					const latestRun = account.runs[0];
+					const running = latestRun?.status === "running";
+					return (
+						<div
+							key={account.id}
+							className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
+						>
+							<span>{account.name}</span>
+							<Badge variant="outline" className="uppercase">
+								{account.market}
+							</Badge>
+							{latestRun && (
+								<Badge
+									variant={
+										latestRun.status === "failed"
+											? "destructive"
+											: latestRun.status === "running"
+												? "default"
+												: "secondary"
+									}
+								>
+									run: {latestRun.stage} · {latestRun.status}
+								</Badge>
+							)}
+							<Button
+								size="sm"
+								variant="ghost"
+								className="ml-auto"
+								disabled={running}
+								onClick={() => {
+									fetch("/api/pipeline/run", {
+										method: "POST",
+										headers: { "content-type": "application/json" },
+										body: JSON.stringify({ accountId: account.id }),
+									}).catch(() => {});
+									setTimeout(onChanged, 500);
+								}}
+							>
+								{running ? "Running…" : "Run pipeline"}
+							</Button>
+						</div>
+					);
+				})}
+			</div>
+		</div>
 	);
 }
 

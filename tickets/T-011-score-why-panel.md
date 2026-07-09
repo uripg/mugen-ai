@@ -53,5 +53,12 @@ note, and score reasoning — the product's answer to the black-box objection.
   alliances/tech procurement/APAC regional/fintech ecosystem) — full list in
   the same research doc; corporate-planning offices are the real decision locus
   for JP/KR (chaebol/keiretsu buying centers).
+- 2026-07-09 · **`SIGNAL-PROTOCOL.md` (repo root) is now the canonical scoring
+  spec** — supersedes the sketches above. Carries: sub-signal taxonomy + tiers,
+  keyword classes K1/K2/K3, axis-gated hard caps, agent reliability grades
+  (A/B/C/D with live evidence), dedupe + staleness rules, behavior/trend
+  layers, an 11-entry loophole register (incl. L3: posting geography ≠ account
+  market — UOB Thailand posting observed), and the audit loop that keeps
+  grades honest. Implement T-011 scoring against it.
 
 ## Reviewer verdict
