@@ -19,10 +19,15 @@ loop starts at T-001 (unblocked: T-001, T-002, T-003 need no pending answers).
 
 ## Active ticket
 
-T-002 **done** (reviewer PASS after 2 fix rounds + 1 accepted rebuttal). Login
-live at mugen-ai.kedalen.dev: shared credential in `.dev.vars`
-(TEAM_LOGIN_EMAIL/PASSWORD), signup closed (`ALLOW_SIGNUP` var), session-gated
-dashboard shell. Next: **T-003** (app D1 schema).
+T-003 **done** (reviewer PASS round 3). All 7 app tables live in D1 (local +
+remote), provenance columns throughout, score⇄reasoning CHECK enforced. App
+accounts table renamed **`target_accounts`** (better-auth owns `accounts`).
+
+**Next: T-004 (get_signals) + T-005 (enrich_contact)** — both now *startable*
+(T-003 done, keys in `.dev.vars`) but *not completable* without QUESTIONS.md
+**Q-4** (spot-check companies to run live calls against) and ideally the
+Sillage/FullEnrich API doc links (QUESTIONS.md Q-1 optional items). T-010/T-012
+still gated on **Q-3** (playbooks). Board: T-001..T-003 done; T-004..T-013 todo.
 
 ## Decisions log
 
