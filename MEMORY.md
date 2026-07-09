@@ -19,7 +19,8 @@ loop starts at T-001 (unblocked: T-001, T-002, T-003 need no pending answers).
 
 ## Active ticket
 
-None (decomposition phase).
+T-001 **done** (deployed live at mugen-ai.kedalen.dev, review skipped — infra
+wiring only, reason logged in ticket). Next: **T-002** (Better Auth login).
 
 ## Decisions log
 
@@ -86,7 +87,13 @@ None (decomposition phase).
 - Repo pre-exists the loop: `create-cloudflare` Next.js scaffold (bun, OpenNext on
   Workers), commit `be6da4d`.
 - Package manager: bun. Deploy: `bun run deploy`. Worker `mugen-ai`, served at
-  **mugen-ai.kedalen.dev** (human-provided domain).
+  **mugen-ai.kedalen.dev** (custom domain bound in wrangler.jsonc; live since
+  T-001, version 8b265662).
+- D1 `mugen-ai-db` → binding `DB`; KV `mugen-ai-kv` → binding `KV`
+  (wrangler.jsonc; ids in T-001 notes).
+- Next 16: `next lint` removed — lint = `eslint .` with flat
+  eslint-config-next imports (T-001 note). Gates: `bun run typecheck` / `lint` /
+  `build`.
 - Secrets local: `.dev.vars` (gitignored) — has `CLAUDE_API_KEY`,
   `BETTER_AUTH_SECRET`; missing Sillage/FullEnrich (Q-1 remainder). Prod: Worker
   secrets via `wrangler secret put` (not yet set).

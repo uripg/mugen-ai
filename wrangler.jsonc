@@ -15,6 +15,25 @@
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
+	"routes": [
+		{
+			"pattern": "mugen-ai.kedalen.dev",
+			"custom_domain": true
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "mugen-ai-db",
+			"database_id": "38b857d6-8807-41f9-8e9e-adf49ad35086"
+		}
+	],
+	"kv_namespaces": [
+		{
+			"binding": "KV",
+			"id": "41f469a2557f4e5683cc3b467d3c163f"
+		}
+	],
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".open-next/assets"
