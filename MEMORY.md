@@ -7,93 +7,81 @@
 
 ## Current phase
 
-**Inception (LOOP.md §2.0) — draft complete, awaiting human ratification.**
-`SPEC.md`, `ARCHITECTURE.md`, and the `AGENTS.md` project slots are drafted
-(`STATUS: DRAFT`), reviewer-checked, and committed.
+**Ratified 2026-07-09 → Phase-1 tickets cut (T-001..T-013), reviewer plan review
+addressed. Awaiting human review of the ticket plan (LOOP.md §2.1.7) + answers in
+`QUESTIONS.md`.** `SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` and
+read-only.
 
-**Next action:** human reviews/edits the three drafts and the blocking questions
-below. On approval: flip the three STATUS markers to `RATIFIED <date>`, answer
-Q-1–Q-4, commit — then run the loop again for ticket decomposition (LOOP.md §2.1).
+**Next action:** human reviews the ticket plan in `tickets/` and (in parallel or
+after) answers `QUESTIONS.md` (Q-1 remainder: Sillage/FullEnrich keys + spend
+authorization; Q-3 playbooks; Q-4 spot-check companies). Then run the loop → main
+loop starts at T-001 (unblocked: T-001, T-002, T-003 need no pending answers).
 
 ## Active ticket
 
-None (pre-tickets phase).
+None (decomposition phase).
 
 ## Decisions log
 
 <!-- <date> · <decision> · <one-line rationale> — settled decisions are not re-litigated -->
 - 2026-07-09 · TOOLBOX.md §2–§5 and CONSTRAINTS.md were unedited templates → defaults
-  treated as in force (per LOOP.md §2.0.1). Gate commands therefore agent-proposed in
-  AGENTS.md §6 for ratification.
-- 2026-07-09 · `designs/` is empty → no visual design input; the agent proposes UI
-  designs per DESIGN.md and flags UI tickets as unvalidated-by-design.
-- 2026-07-09 · Pipeline execution model [agent-proposed]: one account/signal per
-  authenticated request, stage results written to D1 as they complete, dashboard
-  polls · simplest model satisfying "live-updating + survives refresh" without
-  Queues/DOs (ARCHITECTURE.md §1).
-- 2026-07-09 · Auth [agent-proposed]: single shared email+password via Better Auth ·
-  no OAuth app to register; IDEA.md allows either.
-- 2026-07-09 · Reviewer CLI confirmed installed and working: `codex` 0.142.5 at
-  `~/.local/bin/codex`.
-- 2026-07-09 · Inception reviewer pass done (`.loop/reviewer/ask-inception.md`):
-  verdict "needs changes"; all findings addressed — added invariants 12 (JP/KR/SG
-  scope), 13 (no pre-hackathon commits), no-mocks + messaging-judgment + spend-gate
-  wording to invariants 2/4/10; §5 gained external-publishing + broad
-  destructive-ops; §2 gained Tailwind, `.dev.vars`-only, dependency-list scope;
-  Q-5/Q-6/Q-7 added.
+  treated as in force. Gate commands agent-proposed in AGENTS.md §6, ratified.
+- 2026-07-09 · `designs/` is empty → no visual design input; agent proposes UI per
+  DESIGN.md and flags UI tickets as unvalidated-by-design.
+- 2026-07-09 · Pipeline execution model: one account/signal per authenticated
+  request, stage results written to D1, dashboard polls · ratified with
+  ARCHITECTURE.md §1 (fallback: per-stage requests chained from client).
+- 2026-07-09 · Auth: single shared email+password via Better Auth · ratified.
+- 2026-07-09 · Reviewer CLI confirmed working: `codex` 0.142.5.
+- 2026-07-09 · Inception reviewer pass (`.loop/reviewer/ask-inception.md`) findings
+  all addressed (invariants 12–13, no-mocks/messaging/spend wording, §5 additions,
+  Q-5..Q-7).
+- 2026-07-09 · **Human ratified all three docs** and answered: Q-1 keys live in
+  `.dev.vars` (see remainder below); Q-2 deploys approved to Worker `mugen-ai` at
+  **mugen-ai.kedalen.dev**; Q-5 dependency list approved; Q-6 no retention
+  mechanism needed — the project will not continue to exist after the hackathon
+  (pitch statement stands; no wipe script required); Q-7 scaffold commit timestamp
+  confirmed compliant.
+- 2026-07-09 · `.dev.vars` names the Anthropic key `CLAUDE_API_KEY` (not
+  `ANTHROPIC_API_KEY`) · code must pass it explicitly to the SDK, not rely on the
+  default env var name.
+- 2026-07-09 · Pending human inputs expanded into `QUESTIONS.md` (human-requested;
+  answers get transcribed back here, file then archived).
+- 2026-07-09 · Phase-1 plan = 13 tickets T-001..T-013 mirroring ARCHITECTURE.md §6;
+  STRETCH inbound-qualification deliberately not ticketed (SPEC: only after
+  everything works). Reviewer plan review
+  (`.loop/reviewer/ask-ticket-plan.md`) verdict "mostly sound"; all 5 patches
+  applied (Q-1 spend gate on T-006, explicit Q-1/Q-4 blockers on T-007, invariants
+  2/5 on T-008, regenerate-is-paid-run on T-009 w/ invariants 8/10, T-011→T-012
+  typo in T-010) + scope-guard notes on T-003/T-010.
 
 ## Blocking questions (awaiting the human)
 
 <!-- Q-N · <question, why it blocks, options, recommendation> · asked <date> -->
-- **Q-1 · API credentials & spend.** TOOLBOX.md §3 lists no provisioned
-  credentials, and CONSTRAINTS.md defaults say "no real money" without an explicit
-  budget — but the MVP needs live Sillage V2, FullEnrich, and Anthropic keys (all
-  paid). Blocks: every pipeline ticket. Please confirm each key is provisioned,
-  state where it lives (expected: Worker secrets + local `.dev.vars`), and grant a
-  spend line (e.g. "hackathon keys, spend within plan limits OK").
-  Recommendation: add the three entries to TOOLBOX.md §3. · asked 2026-07-09
-- **Q-2 · Deploy sign-off.** CONSTRAINTS.md default "no production / no live
-  deploys without human sign-off" vs. IDEA.md's requirement that the demo run off a
-  real deployed Cloudflare URL. ARCHITECTURE.md's header proposes that ratifying it
-  grants standing sign-off for deploys **to the `mugen-ai` demo Worker only**.
-  Confirm (or restrict). · asked 2026-07-09
-- **Q-3 · Playbook content.** Cultural buying-process notes, buyer psychology
-  notes, and committee-role heuristics for JP/KR/SG must be team-authored (IDEA.md
-  non-negotiable; AGENTS.md invariant 4 — the model may not write them). Blocks:
-  the Deal Intelligence tickets (not the skeleton or core pipeline). Please supply
-  the content (bullets are fine) — the agent will scaffold
-  `src/lib/playbooks/{jp,kr,sg}.ts` and slot your text in verbatim. Also needed for
-  the cut-order fallback: one generic team-authored line per market. · asked
-  2026-07-09
-- **Q-4 · Step 0 spot-check.** Has the human Step 0 been done (1 JP + 1 KR + 1 SG
-  company added to Sillage; 2–3 leadership contacts per company test-enriched in
-  FullEnrich)? Blocks: pipeline tickets build on its outcome. If done, share the
-  three company names/domains so they can seed the `accounts` table. · asked
-  2026-07-09
-- **Q-5 · Dependency sign-off.** CONSTRAINTS.md requires human sign-off for new
-  dependencies. ARCHITECTURE.md §2 lists the proposed set: `better-auth` (+
-  `better-auth-cloudflare` template), `drizzle-orm`/`drizzle-kit`,
-  `@anthropic-ai/sdk`, `zod`, `vitest`. Confirm the list (ratifying
-  ARCHITECTURE.md with this question answered = the sign-off; anything beyond the
-  list stays a §5 item). · asked 2026-07-09
-- **Q-6 · Data retention mechanics.** "Enriched personal data deleted after the
-  hackathon" — is that a manual wipe by the human, something the agent should
-  script (e.g. a documented `wrangler d1` wipe command), or just a pitch
-  statement? Recommendation: agent documents a one-line wipe command; human runs
-  it post-demo. · asked 2026-07-09
-- **Q-7 · Hackathon start-time compliance.** Submission rule: no commits before
-  the hackathon's start. History starts at `be6da4d` (human-made scaffold commit).
-  Confirm its timestamp is after the official start. · asked 2026-07-09
+- **Q-1 (remainder) · Sillage + FullEnrich keys.** Human said keys live in
+  `.dev.vars`, but it currently contains only `CLAUDE_API_KEY` and
+  `BETTER_AUTH_SECRET` — no Sillage or FullEnrich key yet. Please add
+  `SILLAGE_API_KEY` and `FULLENRICH_API_KEY` to `.dev.vars`. Blocks: the
+  `get_signals` / `enrich_contact` tool tickets (testing against real APIs); also
+  note prod deploys of the pipeline need the same values set via
+  `wrangler secret put`. · asked 2026-07-09
+- **Q-3 · Playbook content (pending, human said).** Team-authored JP/KR/SG
+  cultural buying-process notes, buyer psychology notes, committee-role
+  heuristics + one generic fallback line per market. Blocks: the Deal Intelligence
+  tickets only. · asked 2026-07-09
+- **Q-4 · Step 0 spot-check (pending, human said).** 1 JP + 1 KR + 1 SG company
+  added to Sillage, 2–3 contacts each test-enriched in FullEnrich; share the three
+  company names/domains to seed `accounts`. Blocks: pipeline tickets that hit real
+  APIs. · asked 2026-07-09
 
 ## Env / setup notes
 
-- Repo pre-exists the loop: a `create-cloudflare` Next.js scaffold (bun, OpenNext on
-  Cloudflare Workers) committed as `be6da4d`. Inception treated it as the starting
-  point, not a greenfield.
-- Package manager: bun. Deploy script: `bun run deploy` (opennextjs-cloudflare
-  build && deploy). Worker name: `mugen-ai` (wrangler.jsonc).
-- No `typecheck`/`test` scripts exist yet — added in the skeleton ticket per
-  AGENTS.md §6 gates.
-- IDEA.md submission rule "no commits before the hackathon's start time": history
-  starts at `be6da4d` (the scaffold). Assumed compliant since the human made that
-  commit; flag to the human if the start time says otherwise.
+- Repo pre-exists the loop: `create-cloudflare` Next.js scaffold (bun, OpenNext on
+  Workers), commit `be6da4d`.
+- Package manager: bun. Deploy: `bun run deploy`. Worker `mugen-ai`, served at
+  **mugen-ai.kedalen.dev** (human-provided domain).
+- Secrets local: `.dev.vars` (gitignored) — has `CLAUDE_API_KEY`,
+  `BETTER_AUTH_SECRET`; missing Sillage/FullEnrich (Q-1 remainder). Prod: Worker
+  secrets via `wrangler secret put` (not yet set).
+- No `typecheck`/`test` scripts yet — added in the skeleton ticket per AGENTS.md §6
+  gates.

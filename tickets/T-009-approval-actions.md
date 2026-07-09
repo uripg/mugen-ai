@@ -1,0 +1,37 @@
+---
+id: T-009
+title: Approve / Edit / Regenerate with server-enforced approval gate
+status: todo
+priority: P0
+phase: 1
+depends-on: [T-008]
+spec-refs: [SPEC.md §2 IN-8/IN-9, ARCHITECTURE.md §3 leads/drafts, ARCHITECTURE.md §6.3]
+invariants: [1, 7, 8, 10]
+reviewer-verdict:
+---
+
+## Description
+The human control surface: Approve (→ simulated "sent" state), Edit (persist
+edited_body), Regenerate (new draft version via the pipeline) — all server
+actions/routes enforcing the state machine in D1 so approval state survives
+refresh. This is the demo's on-stage moment and the product's core trust claim.
+**Regenerate re-runs the paid draft step (Anthropic)** — so it is itself a
+human-triggered paid run: bounded retries, spend gate, zod-validated body
+(invariants 8, 10).
+
+## Acceptance criteria
+- [ ] The ONLY path to `sent-simulated` is an authenticated approve action; no
+      auto-send code path exists anywhere (invariant 1 — the reviewer must be able
+      to verify this by inspection)
+- [ ] Edit persists and renders `edited_body`; Regenerate appends a new draft
+      version (history kept), both auth-gated (invariant 7)
+- [ ] Invalid transitions rejected server-side (e.g. approve an already-sent lead)
+- [ ] All states survive refresh and re-login
+- [ ] type-check / lint / test / build pass; state machine unit-tested (AGENTS.md
+      §7 — permission/transition decisions are deterministic core)
+
+## Plan
+
+## Notes / Decisions
+
+## Reviewer verdict

@@ -1,15 +1,13 @@
 # ARCHITECTURE.md — technical design (how)
 
-> **STATUS: DRAFT — awaiting human ratification.** Drafted at inception (LOOP.md
-> §2.0) from `IDEA.md` + the drafted `SPEC.md`. Items marked **[agent-proposed]**
-> are proposals for the human to ratify. After ratification this file is read-only;
-> changes are an `AGENTS.md` §5 human decision.
+> **STATUS: RATIFIED 2026-07-09.** Drafted at inception (LOOP.md §2.0) from
+> `IDEA.md` + the drafted `SPEC.md`. [agent-proposed] items were accepted at
+> ratification. This file is now read-only; changes are an `AGENTS.md` §5 human
+> decision.
 >
-> **Proposed (not assumed):** ratifying this document would also constitute the
-> human sign-off required by `CONSTRAINTS.md` §1 for (a) the **new dependencies
-> (prod and dev)** listed in §2, and (b) **deploys to the demo Cloudflare Worker**
-> (`mugen-ai`). Both are mirrored as explicit blocking questions (`MEMORY.md`
-> Q-2, Q-5) so nothing is granted silently — answer them at ratification.
+> At ratification the human explicitly signed off (MEMORY.md Q-2, Q-5): (a) the
+> **new dependencies (prod and dev)** listed in §2, and (b) **deploys to the demo
+> Worker `mugen-ai`, served at `mugen-ai.kedalen.dev`**.
 
 ---
 

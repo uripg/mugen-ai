@@ -5,11 +5,11 @@ repo. `LOOP.md` references this file constantly. Read it in full at the start of
 work session. Do not edit it to make a build pass — if a rule is wrong, that's a
 blocking question for the human.
 
-> **STATUS: DRAFT — awaiting human ratification.** The project slots (§1 invariants,
-> §2 stack, §3 layout, §5 human-only list, §6 gate names, §8 posture) were filled at
+> **STATUS: RATIFIED 2026-07-09.** The project slots (§1 invariants, §2 stack,
+> §3 layout, §5 human-only list, §6 gate names, §8 posture) were filled at
 > inception (LOOP.md §2.0) from `IDEA.md` + `TOOLBOX.md` + `CONSTRAINTS.md` +
-> `SPEC.md`/`ARCHITECTURE.md`. The generic rules in this file apply to every project
-> as-is and are never edited.
+> `SPEC.md`/`ARCHITECTURE.md` and ratified by the human. The generic rules in this
+> file apply to every project as-is and are never edited.
 
 ---
 

@@ -1,8 +1,8 @@
 # SPEC.md — product spec (what / why)
 
-> **STATUS: DRAFT — awaiting human ratification.** Drafted at inception (LOOP.md
-> §2.0) from `IDEA.md`, `TOOLBOX.md`, `CONSTRAINTS.md`. After ratification this file
-> is read-only; changes are an `AGENTS.md` §5 human decision.
+> **STATUS: RATIFIED 2026-07-09.** Drafted at inception (LOOP.md §2.0) from
+> `IDEA.md`, `TOOLBOX.md`, `CONSTRAINTS.md`. This file is now read-only; changes
+> are an `AGENTS.md` §5 human decision.
 
 ---
 
