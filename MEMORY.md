@@ -69,6 +69,11 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
 - 2026-07-09 · **Human decision: shadcn/ui + shadcn CLI EXCLUSIVELY for all UI**
   (hard requirement) · recorded in AGENTS.md §2 + ARCHITECTURE.md §2; UI tickets
   amended; T-014 filed to init shadcn and convert the T-002 screens.
+- 2026-07-09 · **Human: "spend is ok"** — explicit spend authorization for the
+  Sillage / FullEnrich / Anthropic hackathon keys within plan limits (satisfies
+  invariant 10's gate + CONSTRAINTS "no real money" carve-out). Also: agent runs
+  `wrangler secret put` itself — done; all 4 secrets live on the Worker
+  (SILLAGE_API_KEY, FULLENRICH_API_KEY, CLAUDE_API_KEY, BETTER_AUTH_SECRET).
 
 ## Blocking questions (awaiting the human)
 
@@ -81,7 +86,9 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   cultural buying-process notes, buyer psychology notes, committee-role
   heuristics + one generic fallback line per market. Blocks: the Deal Intelligence
   tickets only. · asked 2026-07-09
-- **Q-4 · PARTIALLY RESOLVED 2026-07-09**: human added 12 fintech/banking accounts to Sillage (pasted Top Accounts screen); seeded to target_accounts local+remote (scripts/seed-accounts.sql; 3 JP, 4 KR, 5 SG). Sillage mapping status was still QUEUING — no signals yet; FullEnrich spot-check results not reported. Note: Tokio Marine Insurance Group (Asia) classified as sg (regional HQ Singapore) — human to correct if wrong. Still open: Q-1 spend checkbox, secret-put preference, API doc links. · asked 2026-07-09
+- **Q-4 · PARTIALLY RESOLVED 2026-07-09**: human added 12 fintech/banking accounts to Sillage (pasted Top Accounts screen); seeded to target_accounts local+remote (scripts/seed-accounts.sql; 3 JP, 4 KR, 5 SG). Sillage mapping status was still QUEUING — no signals yet; FullEnrich spot-check results not reported. Note: Tokio Marine Insurance Group (Asia) classified as sg (regional HQ Singapore) — human to correct if wrong. Still open: Sillage mapping completion + FullEnrich spot-check note; API doc links optional. · asked 2026-07-09
+- **HOLD (human, 2026-07-09):** after secrets were set, human said "hold" — do
+  NOT proceed to T-004+ until the human says continue.
 
 ## Env / setup notes
 

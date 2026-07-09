@@ -10,3 +10,4 @@
 2026-07-09 · T-014 · shadcn hard requirement · done: shadcn init (radix-nova), button/input/card/label added via CLI, login+shell+signout converted, deployed 09619c0c, auth verified live · next: QUESTIONS.md answers → T-004/T-005
 2026-07-09 · Q-3 · playbooks · human supplied JP/KR/SG playbooks in QUESTIONS.md; transcribed verbatim to src/lib/playbooks/ · next: Q-4 companies, then T-004/T-005
 2026-07-09 · Q-4 partial · 12 Sillage accounts seeded to target_accounts (local+remote); signals still queuing · next: T-004/T-005 implementation; live verification once Sillage mapping completes
+2026-07-09 · secrets+spend · human authorized spend; all 4 Worker secrets set via wrangler; HOLD ordered — loop paused before T-004 · next: resume on human go
