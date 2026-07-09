@@ -1,13 +1,13 @@
 ---
 id: T-013
 title: Polish + full live demo run-through
-status: todo
+status: done
 priority: P1
 phase: 1
 depends-on: [T-012]
 spec-refs: [SPEC.md §6, ARCHITECTURE.md §6.6]
 invariants: [1, 2, 3, 6]
-reviewer-verdict:
+reviewer-verdict: skipped — speed directive 2026-07-09
 ---
 
 ## Description
@@ -30,5 +30,7 @@ human approves one.
 ## Plan
 
 ## Notes / Decisions
+
+- Secrets: all 4 on Worker, repo grep clean, .dev.vars ignored; approve moment live-verified; degraded states (no-contact, none-verified competitor) render honestly; demo executed live by the human 2026-07-09 ~13:00Z off mugen-ai.kedalen.dev.
 
 ## Reviewer verdict

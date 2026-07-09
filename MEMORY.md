@@ -11,18 +11,22 @@
 `SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` (amended twice by human
 decision: testing reduced; shadcn-exclusive UI).
 
-**Board:** T-001..T-007, T-014 **done** · T-008..T-013 todo.
+**Board:** ALL PHASE-1 TICKETS DONE (T-001..T-014). Demo delivered live
+2026-07-09 ~13:00Z off mugen-ai.kedalen.dev.
 Playbooks (Q-3) transcribed to `src/lib/playbooks/`. App live at
 https://mugen-ai.kedalen.dev behind the shared team login.
 
 ## Active ticket
 
-None in progress. **Next: T-008 (dashboard v1).** The core pipeline is live:
-`POST /api/pipeline/run {accountId}` on mugen-ai.kedalen.dev (auth-gated,
-NDJSON heartbeat stream, result also durable in D1 `pipeline_runs`). T-008
-notes: poll `pipeline_runs`/`leads`; the run survives client disconnects, so
-fire-and-poll is safe; lead stages now include `no-contact` (render "no
-verified contact" from `leads.stage_detail`).
+None — Phase 1 complete. T-008..T-013 shipped in one 30-min sprint wave
+(2 parallel agents: UI+routes ∥ intel/score/regenerate), review skipped per
+speed directive, all live-verified on prod. Final prod state: scored+drafted
+leads Nium 62 / DBS 58 / Toss(KR) 54, MUFG honest no-verified-contact;
+approve→sent-simulated exercised live; all gates clean; secrets grep clean.
+Sprint findings: FullEnrich needs the 4-min poll budget (2 min failed under
+3x concurrent load — run markets sequentially or ≤2 parallel); pre-intel
+leads (T-007-era) show honest empty why-panels — expected, not a bug.
+STRETCH (inbound qualification) not started, per SPEC only-after-everything.
 Note for T-010: the human playbooks use committee-role labels beyond the
 contacts.committeeRole enum (strategic evaluator, commercial evaluator/gatekeeper,
 market-entry scout, senior sponsor) — extend the enum or map at intel time.

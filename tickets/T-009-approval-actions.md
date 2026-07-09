@@ -1,7 +1,7 @@
 ---
 id: T-009
 title: Approve / Edit / Regenerate with server-enforced approval gate
-status: in-progress
+status: done
 priority: P0
 phase: 1
 depends-on: [T-008]
@@ -32,5 +32,7 @@ human-triggered paid run: bounded retries, spend gate, zod-validated body
 ## Plan
 
 ## Notes / Decisions
+
+- Live-verified on prod: draft→approved→sent-simulated (Nium); invalid transitions 409; unauth 401; edit blocked after sent (409). Regenerate route deployed (single bounded paid call).
 
 ## Reviewer verdict

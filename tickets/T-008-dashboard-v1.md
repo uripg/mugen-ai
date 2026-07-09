@@ -1,7 +1,7 @@
 ---
 id: T-008
 title: Dashboard v1 — live-updating lead cards via polling
-status: in-progress
+status: done
 priority: P0
 phase: 1
 depends-on: [T-007, T-014]
@@ -30,5 +30,7 @@ DESIGN.md**.
 ## Plan
 
 ## Notes / Decisions
+
+- Live-verified: dashboard on prod polls /api/leads (3s), cards painted stage-by-stage during live runs; refresh-safe (all state D1).
 
 ## Reviewer verdict

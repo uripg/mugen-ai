@@ -15,3 +15,4 @@
 2026-07-09 · T-005 · STEP 3-8 · enrich_contact built, FullEnrich v2 verified via docs, live-enriched Nium CEO (verified=true), .dev.vars key fixed + prod secret re-put, reviewer FAIL→PASS · next: T-006 research_market
 2026-07-09 · T-006 · STEP 3-8 · research_market built on @anthropic-ai/sdk + web_search_20260209, live-verified both outcomes on Nium, reviewer PASS · next: T-007 core pipeline SG
 2026-07-09 · T-007 · impl+verify · done — pipeline live on prod (run 449bc46d drafted); review skipped (speed directive); container-id + edge-timeout fixes; sillage_id backfill → remote · next: T-008 dashboard v1
+2026-07-09 · T-008..T-013 · sprint wave · ALL DONE — 3 markets live-scored on prod (Nium 62/DBS 58/Toss 54, MUFG honest no-contact); approve machine verified; demo delivered live · next: none (Phase 1 complete)

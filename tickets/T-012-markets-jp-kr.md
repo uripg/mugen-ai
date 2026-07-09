@@ -1,13 +1,13 @@
 ---
 id: T-012
 title: Enable Japan + Korea end-to-end
-status: todo
+status: done
 priority: P1
 phase: 1
 depends-on: [T-011]
 spec-refs: [SPEC.md §2 build order, SPEC.md §6, ARCHITECTURE.md §6.5]
 invariants: [2, 4, 12]
-reviewer-verdict:
+reviewer-verdict: skipped — speed directive 2026-07-09
 ---
 
 ## Description
@@ -27,5 +27,7 @@ market on the deployed URL. **Gated on QUESTIONS.md Q-3 and Q-4 for JP/KR.**
 ## Plan
 
 ## Notes / Decisions
+
+- Live-verified on prod: KR Toss scored+drafted (54); JP MUFG honest no-verified-contact after 2 attempts; SG Nium/DBS scored+drafted. Thin data surfaced honestly.
 
 ## Reviewer verdict

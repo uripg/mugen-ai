@@ -1,7 +1,7 @@
 ---
 id: T-011
 title: Expansion Readiness Score + why-panel
-status: in-progress
+status: done
 priority: P1
 phase: 1
 depends-on: [T-009, T-010]
@@ -30,6 +30,8 @@ note, and score reasoning — the product's answer to the black-box objection.
 ## Plan
 
 ## Notes / Decisions
+
+- Live-verified: Nium 62 / DBS 58 / Toss 54 all with reasoning+sourceRefs (CHECK-enforced); why-panel six sections with honest empties (pre-intel Nium lead shows not-found/none states).
 
 - 2026-07-09 · Scoring framework from human-supplied signal research (see chat):
   tag every signal by **axis** — direction (Europe, not US) / timing (now) /

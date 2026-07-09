@@ -1,7 +1,7 @@
 ---
 id: T-010
 title: Deal Intelligence layer — committee, playbook notes, competitor, repositioning
-status: in-progress
+status: done
 priority: P1
 phase: 1
 depends-on: [T-006, T-007]
@@ -41,5 +41,7 @@ half as a new ticket rather than stretching this one).
 ## Plan
 
 ## Notes / Decisions
+
+- Live-verified: playbook notes verbatim w/ keys, competitor note via research_market, committee cap 1, value prop persisted; MUFG no-contact honest path exercised.
 
 ## Reviewer verdict
