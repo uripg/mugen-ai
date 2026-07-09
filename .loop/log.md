@@ -9,3 +9,4 @@
 2026-07-09 · T-003 · STEP 5-8 · done: 7 app tables migrated local+remote w/ provenance + score CHECK, reviewer PASS round 3 · next: T-004/T-005 — gated on QUESTIONS.md Q-4 (+ Sillage/FullEnrich doc links)
 2026-07-09 · T-014 · shadcn hard requirement · done: shadcn init (radix-nova), button/input/card/label added via CLI, login+shell+signout converted, deployed 09619c0c, auth verified live · next: QUESTIONS.md answers → T-004/T-005
 2026-07-09 · Q-3 · playbooks · human supplied JP/KR/SG playbooks in QUESTIONS.md; transcribed verbatim to src/lib/playbooks/ · next: Q-4 companies, then T-004/T-005
+2026-07-09 · Q-4 partial · 12 Sillage accounts seeded to target_accounts (local+remote); signals still queuing · next: T-004/T-005 implementation; live verification once Sillage mapping completes
