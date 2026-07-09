@@ -6,7 +6,7 @@ priority: P1
 phase: 1
 depends-on: [T-009, T-010]
 spec-refs: [SPEC.md §2 IN-5/IN-7, ARCHITECTURE.md §3 leads, ARCHITECTURE.md §6.4]
-invariants: [2, 3]
+invariants: [2, 3, 11]
 reviewer-verdict:
 ---
 

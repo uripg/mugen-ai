@@ -73,6 +73,7 @@ CONSTRAINTS.md sign-off for adding them]**:
 | `@anthropic-ai/sdk` | The agent pipeline: Claude tool-use loop + the native `web_search` server tool. |
 | `zod` | Validate all external input at the boundary: API route bodies and Sillage/FullEnrich responses. |
 | ~~`vitest` (dev)~~ | Dropped 2026-07-09 by human decision at plan review — testing radically reduced for iteration speed; no unit-test suite in Phase 1. |
+| `shadcn/ui` (+ its vendored deps: radix-ui, cva, clsx, tailwind-merge, lucide-react) | **Added 2026-07-09 by human decision: the EXCLUSIVE UI layer.** Components enter the repo only via the shadcn CLI. |
 
 **Model [agent-proposed]:** the pipeline uses a current Claude model via the
 Anthropic API; exact model id chosen at implementation time against current docs

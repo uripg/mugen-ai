@@ -4,13 +4,14 @@ title: Dashboard v1 — live-updating lead cards via polling
 status: todo
 priority: P0
 phase: 1
-depends-on: [T-007]
+depends-on: [T-007, T-014]
 spec-refs: [SPEC.md §2 IN-8, ARCHITECTURE.md §1, §5, ARCHITECTURE.md §6.3]
 invariants: [2, 5, 7]
 reviewer-verdict:
 ---
 
 ## Description
+UI hard requirement: shadcn/ui components exclusively, via the shadcn CLI (T-014).
 The one dashboard page: auth-gated, polling a read endpoint every few seconds so
 lead cards visibly populate stage-by-stage as pipeline runs write to D1 (signal →
 contact → draft). Includes a "run pipeline" trigger per account. UI is

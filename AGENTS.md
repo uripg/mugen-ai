@@ -105,7 +105,14 @@ These are the load-bearing laws of the system. A change that violates one is a
 - **Tests:** radically reduced by human decision 2026-07-09 (iteration speed):
   no unit-test suite / no vitest; §7 applies only if a test is ever added.
   Verification = gates + exercising the change on the live deployment.
-- **Lint/format:** ESLint (scaffold config). Tailwind CSS 4 (scaffold) for UI.
+- **UI (HARD REQUIREMENT, human decision 2026-07-09):** **shadcn/ui exclusively**,
+  with every component added via the **shadcn CLI** (`bunx shadcn@latest add
+  <component>`) — never hand-copied, never from any other component library.
+  Custom UI may only compose shadcn components/primitives + Tailwind utilities.
+  The CLI's vendored dependencies (radix-ui, cva, clsx, tailwind-merge,
+  lucide-react, etc.) are approved as part of this decision.
+- **Lint/format:** ESLint (scaffold config). Tailwind CSS 4 (scaffold) under
+  shadcn.
 - **Package manager:** bun.
 - **Env files:** local secrets in gitignored `.dev.vars` only — `.env.local` is
   banned in this project (IDEA.md stack notes; OpenNext dev bindings read

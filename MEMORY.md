@@ -70,6 +70,10 @@ still gated on **Q-3** (playbooks). Board: T-001..T-003 done; T-004..T-013 todo.
   ratified AGENTS.md/ARCHITECTURE.md test slots.) Plan otherwise approved → main
   loop started.
 
+- 2026-07-09 · **Human decision: shadcn/ui + shadcn CLI EXCLUSIVELY for all UI**
+  (hard requirement) · recorded in AGENTS.md §2 + ARCHITECTURE.md §2; UI tickets
+  amended; T-014 filed to init shadcn and convert the T-002 screens.
+
 ## Blocking questions (awaiting the human)
 
 <!-- Q-N · <question, why it blocks, options, recommendation> · asked <date> -->
