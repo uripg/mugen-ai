@@ -78,7 +78,7 @@ const USABLE_EMAIL_STATUSES = new Set(["DELIVERABLE", "HIGH_PROBABILITY"]);
 
 const POLL_INITIAL_WAIT_MS = 5_000;
 const POLL_INTERVAL_MS = 5_000;
-const MAX_POLLS = 24; // ≈ 2 minutes total
+const MAX_POLLS = 48; // ≈ 4 minutes total (24 proved too tight under live load)
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

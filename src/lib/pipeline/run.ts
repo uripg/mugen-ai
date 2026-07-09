@@ -14,6 +14,8 @@ import { z } from "zod";
 import { and, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import {
+	contacts,
+	dealIntel,
 	drafts,
 	leads,
 	pipelineRuns,
@@ -23,15 +25,23 @@ import {
 import { playbooks, type MarketPlaybook } from "../playbooks";
 import { getSignals } from "../tools/get_signals";
 import { enrichContact } from "../tools/enrich_contact";
+import { researchMarket } from "../tools/research_market";
 import { PRODUCT_CONTEXT } from "./product";
 
 const MODEL = "claude-opus-4-8";
 const MAX_TOKENS = 4000;
 // Bounds (invariant 10): exceeding the turn bound is a run FAILURE, never a
 // silent truncation. pause_turn resumes and invalid tool inputs both count.
-const MAX_TURNS = 16;
+// 24 turns: the T-010/T-011 tail (committee + value prop + score) needs more
+// room than the original 16.
+const MAX_TURNS = 24;
 const MAX_WEB_SEARCHES = 8;
 const MAX_PAID_ENRICH_ATTEMPTS = 2;
+// HARD CAP: 1 committee member per run (SPEC allows 2; capped at 1 for time).
+// Separate budget from the primary MAX_PAID_ENRICH_ATTEMPTS.
+const MAX_COMMITTEE_ATTEMPTS = 1;
+
+const COMMITTEE_ROLES = contacts.committeeRole.enumValues;
 
 // --- zod at the boundary (invariant 8): model tool inputs are external input
 
@@ -46,6 +56,22 @@ const enrichContactInputSchema = z.object({
 	first_name: z.string().min(1),
 	last_name: z.string().min(1),
 	linkedin_url: z.string().optional(),
+});
+
+const enrichCommitteeInputSchema = z.object({
+	first_name: z.string().min(1),
+	last_name: z.string().min(1),
+	role: z.enum(COMMITTEE_ROLES),
+	linkedin_url: z.string().optional(),
+});
+
+const saveValuePropInputSchema = z.object({
+	content: z.string().min(1),
+});
+
+const setScoreInputSchema = z.object({
+	score: z.number().int().min(0).max(100),
+	reasoning: z.string().min(20),
 });
 
 const writeDraftInputSchema = z.object({
@@ -108,9 +134,62 @@ const TOOLS: Anthropic.Messages.ToolUnion[] = [
 		},
 	},
 	{
+		name: "enrich_committee",
+		description:
+			"Verify ONE additional buying-committee member at the account via FullEnrich and tag their committee role. Only callable after the primary contact is verified. Max 1 committee member per run; a miss is fine — the primary contact stands.",
+		input_schema: {
+			type: "object",
+			properties: {
+				first_name: { type: "string" },
+				last_name: { type: "string" },
+				role: {
+					type: "string",
+					enum: [...COMMITTEE_ROLES],
+					description:
+						"Committee role per the playbook committeeRoleHeuristics",
+				},
+				linkedin_url: {
+					type: "string",
+					description:
+						"Optional LinkedIn profile URL; improves match rates",
+				},
+			},
+			required: ["first_name", "last_name", "role"],
+		},
+	},
+	{
+		name: "save_value_prop",
+		description:
+			"Persist the repositioned value proposition for this account (3-5 sentences, grounded ONLY in the selected signal, verified contact(s), playbook notes and competitor note). Required before set_score.",
+		input_schema: {
+			type: "object",
+			properties: {
+				content: { type: "string" },
+			},
+			required: ["content"],
+		},
+	},
+	{
+		name: "set_score",
+		description:
+			"Set the lead's 0-100 expansion-readiness score with reasoning referencing ONLY persisted inputs. Required after save_value_prop and before write_draft.",
+		input_schema: {
+			type: "object",
+			properties: {
+				score: { type: "integer", minimum: 0, maximum: 100 },
+				reasoning: {
+					type: "string",
+					description:
+						"Why this score, referencing only persisted inputs (min 20 chars)",
+				},
+			},
+			required: ["score", "reasoning"],
+		},
+	},
+	{
 		name: "write_draft",
 		description:
-			"Store the outreach email draft for the verified contact. Only callable after enrich_contact returned a verified contact.",
+			"Store the outreach email draft for the verified contact. Only callable after enrich_contact verified a contact, save_value_prop was saved and set_score was set.",
 		input_schema: {
 			type: "object",
 			properties: {
@@ -153,6 +232,13 @@ interface RunState {
 	leadId: string | null;
 	selectedSignalId: string | null;
 	contactId: string | null;
+	committeeContactIds: string[];
+	committeeAttempts: number;
+	culturalIntelId: string | null;
+	psychologyIntelId: string | null;
+	competitorIntelId: string | null;
+	valuePropIntelId: string | null;
+	scoreSet: boolean;
 	draftId: string | null;
 	paidEnrichAttempts: number;
 	enrichFailures: number;
@@ -169,6 +255,7 @@ interface RunContext {
 	env: PipelineEnv;
 	db: ReturnType<typeof drizzle>;
 	account: typeof targetAccounts.$inferSelect;
+	playbook: MarketPlaybook;
 	state: RunState;
 }
 
@@ -217,7 +304,10 @@ Work in this order:
 2. Pick the ONE signal most indicative of international / Europe-expansion readiness and call select_signal with your reasoning.
 3. Use web_search to identify a real, named decision-maker at ${account.name} relevant to that signal. Prefer senior buyer roles — Head of Global Partnerships, Business Development, Digital Transformation, Payments, Innovation — NOT client-facing roles like relationship managers.
 4. Verify that person via enrich_contact. FullEnrich is the verification gate: never present an unverified person as a contact. Max 2 attempts; if the first fails you may try ONE different person.
-5. Once a contact is verified, call write_draft with the outreach email.
+5. Once the primary contact is verified, optionally map ONE additional buying-committee member: use web_search plus the committee-role heuristics below to pick a likely second stakeholder, then verify via enrich_committee with their role. Max 1 committee member; a missing committee member is fine — do not retry, just continue.
+6. Call save_value_prop: a short repositioning (3-5 sentences) of OUR product for THIS account, market and committee, written ONLY from the selected signal, the verified contact(s), the playbook notes and the competitor note (if any). Never invent market claims.
+7. Call set_score: a 0-100 expansion-readiness score with reasoning referencing ONLY persisted inputs — signal recency/type, contact seniority/verification, committee coverage, competitor presence. Thin data must score honestly low, never padded.
+8. Call write_draft. The draft MUST be written from the saved value prop (not a generic European pitch), following the playbook messaging judgment.
 
 Draft rules:
 - Tone, structure and judgment must follow ONLY the team-authored market playbook below. Never invent cultural claims, named customers, proof points, ROI numbers, or compliance/local-presence claims not supported by the selected signal, the product one-liner, or the playbook.
@@ -229,6 +319,8 @@ Cultural buying process:
 ${bullets(playbook.culturalBuyingProcess)}
 Buyer psychology:
 ${bullets(playbook.buyerPsychology)}
+Committee role heuristics:
+${bullets(playbook.committeeRoleHeuristics)}
 Messaging judgment:
 ${bullets(playbook.messagingJudgment)}`;
 }
@@ -273,13 +365,20 @@ export async function runPipeline(
 		leadId: null,
 		selectedSignalId: null,
 		contactId: null,
+		committeeContactIds: [],
+		committeeAttempts: 0,
+		culturalIntelId: null,
+		psychologyIntelId: null,
+		competitorIntelId: null,
+		valuePropIntelId: null,
+		scoreSet: false,
 		draftId: null,
 		paidEnrichAttempts: 0,
 		enrichFailures: 0,
 		lastUsage: null,
 		terminal: null,
 	};
-	const ctx: RunContext = { env, db, account, state };
+	const ctx: RunContext = { env, db, account, playbook, state };
 
 	try {
 		await runToolLoop(ctx, playbook);
@@ -421,6 +520,21 @@ async function dispatchTool(
 			if (!parsed.success) return invalidInput(parsed.error);
 			return handleEnrichContact(ctx, parsed.data);
 		}
+		case "enrich_committee": {
+			const parsed = enrichCommitteeInputSchema.safeParse(toolUse.input);
+			if (!parsed.success) return invalidInput(parsed.error);
+			return handleEnrichCommittee(ctx, parsed.data);
+		}
+		case "save_value_prop": {
+			const parsed = saveValuePropInputSchema.safeParse(toolUse.input);
+			if (!parsed.success) return invalidInput(parsed.error);
+			return handleSaveValueProp(ctx, parsed.data);
+		}
+		case "set_score": {
+			const parsed = setScoreInputSchema.safeParse(toolUse.input);
+			if (!parsed.success) return invalidInput(parsed.error);
+			return handleSetScore(ctx, parsed.data);
+		}
 		case "write_draft": {
 			const parsed = writeDraftInputSchema.safeParse(toolUse.input);
 			if (!parsed.success) return invalidInput(parsed.error);
@@ -555,6 +669,55 @@ async function handleEnrichContact(
 			.set({ stage: "contact", primaryContactId: result.contact.id })
 			.where(eq(leads.id, ctx.state.leadId));
 		await setStage(ctx, "contact");
+
+		// T-010 orchestrator-side deal intel — deterministic, immediately after
+		// the verified contact. Playbook notes are inserted VERBATIM (invariant
+		// 4: the model never authors market content). rawPayload null: the
+		// playbook is repo-versioned.
+		const [cultural] = await ctx.db
+			.insert(dealIntel)
+			.values({
+				leadId: ctx.state.leadId,
+				kind: "cultural-note",
+				content: ctx.playbook.culturalBuyingProcess.join("\n"),
+				playbookKey: `${ctx.account.market}.culturalBuyingProcess`,
+				sourceTool: "playbook",
+			})
+			.returning();
+		ctx.state.culturalIntelId = cultural.id;
+		const [psychology] = await ctx.db
+			.insert(dealIntel)
+			.values({
+				leadId: ctx.state.leadId,
+				kind: "psychology-note",
+				content: ctx.playbook.buyerPsychology.join("\n"),
+				playbookKey: `${ctx.account.market}.buyerPsychology`,
+				sourceTool: "playbook",
+			})
+			.returning();
+		ctx.state.psychologyIntelId = psychology.id;
+		await ctx.db
+			.update(leads)
+			.set({ stage: "intel" })
+			.where(eq(leads.id, ctx.state.leadId));
+		await setStage(ctx, "intel");
+
+		// Competitor research (bounded, one call). On throw: honest absence —
+		// record nothing, never fail the run (SPEC cut order).
+		let competitorNote = "none_found";
+		try {
+			const research = await researchMarket(ctx.env, {
+				leadId: ctx.state.leadId,
+				productContext: PRODUCT_CONTEXT,
+			});
+			ctx.state.competitorIntelId = research.intel.id;
+			if (research.outcome === "competitors_found") {
+				competitorNote = research.intel.content;
+			}
+		} catch {
+			// honest absence — no intel row recorded
+		}
+
 		// Compact + PII-lean tool_result: the model already knows the name it
 		// asked for — no name/email flows back (invariant 9 posture).
 		return ok({
@@ -564,6 +727,11 @@ async function handleEnrichContact(
 				title: result.contact.title,
 				email_status: result.emailStatus,
 				verified: result.contact.verified,
+			},
+			intel: {
+				cultural: true,
+				psychology: true,
+				competitor_note: competitorNote,
 			},
 		});
 	}
@@ -600,6 +768,129 @@ async function handleEnrichContact(
 	});
 }
 
+async function handleEnrichCommittee(
+	ctx: RunContext,
+	input: z.infer<typeof enrichCommitteeInputSchema>,
+): Promise<ToolOutcome> {
+	if (!ctx.state.leadId || !ctx.state.contactId) {
+		return err(
+			"enrich_committee is only allowed after the primary contact is verified.",
+		);
+	}
+	// HARD CAP: 1 committee member per run (SPEC allows 2; capped at 1 for
+	// time). Separate budget from the primary enrich attempts.
+	if (ctx.state.committeeAttempts >= MAX_COMMITTEE_ATTEMPTS) {
+		return err(
+			"Committee budget exhausted (1 member per run) — continue with save_value_prop.",
+		);
+	}
+	ctx.state.committeeAttempts += 1;
+
+	const result = await enrichContact(ctx.env, {
+		accountId: ctx.account.id,
+		signalId: ctx.state.selectedSignalId ?? undefined,
+		firstName: input.first_name,
+		lastName: input.last_name,
+		linkedinUrl: input.linkedin_url,
+	});
+	if (result.outcome === "contact") {
+		await ctx.db
+			.update(contacts)
+			.set({ committeeRole: input.role })
+			.where(eq(contacts.id, result.contact.id));
+		ctx.state.committeeContactIds.push(result.contact.id);
+		return ok({
+			outcome: "contact",
+			contact: {
+				id: result.contact.id,
+				title: result.contact.title,
+				role: input.role,
+				email_status: result.emailStatus,
+				verified: result.contact.verified,
+			},
+		});
+	}
+	// Honest absence: the primary contact stands — no lead stage change, this
+	// is just a missing committee member.
+	return ok({ outcome: "no_verified_contact", reason: result.reason });
+}
+
+async function handleSaveValueProp(
+	ctx: RunContext,
+	input: z.infer<typeof saveValuePropInputSchema>,
+): Promise<ToolOutcome> {
+	if (!ctx.state.leadId || !ctx.state.contactId) {
+		return err(
+			"save_value_prop is only allowed after the primary contact is verified.",
+		);
+	}
+	if (ctx.state.valuePropIntelId) {
+		return err("Value prop already saved — call set_score.");
+	}
+	const [intel] = await ctx.db
+		.insert(dealIntel)
+		.values({
+			leadId: ctx.state.leadId,
+			kind: "repositioned-value-prop",
+			content: input.content,
+			sourceTool: "pipeline",
+			// Provenance (invariant 2): every ref is a real persisted row id.
+			rawPayload: {
+				model: MODEL,
+				runId: ctx.state.runId,
+				leadId: ctx.state.leadId,
+				basedOn: {
+					signalId: ctx.state.selectedSignalId,
+					contactId: ctx.state.contactId,
+					culturalIntelId: ctx.state.culturalIntelId,
+					psychologyIntelId: ctx.state.psychologyIntelId,
+					competitorIntelId: ctx.state.competitorIntelId,
+				},
+			},
+		})
+		.returning();
+	ctx.state.valuePropIntelId = intel.id;
+	return ok({ value_prop_id: intel.id });
+}
+
+async function handleSetScore(
+	ctx: RunContext,
+	input: z.infer<typeof setScoreInputSchema>,
+): Promise<ToolOutcome> {
+	if (!ctx.state.leadId || !ctx.state.contactId) {
+		return err("set_score is only allowed after the primary contact is verified.");
+	}
+	if (!ctx.state.valuePropIntelId) {
+		return err("Call save_value_prop before set_score.");
+	}
+	if (ctx.state.scoreSet) {
+		return err("Score already set — call write_draft.");
+	}
+	// Invariant 3: score + reasoning + sourceRefs together (leads CHECK). Refs
+	// are every persisted row id the score was computed from.
+	const sourceRefs = [
+		ctx.state.selectedSignalId,
+		ctx.state.contactId,
+		...ctx.state.committeeContactIds,
+		ctx.state.culturalIntelId,
+		ctx.state.psychologyIntelId,
+		ctx.state.competitorIntelId,
+		ctx.state.valuePropIntelId,
+	].filter((ref): ref is string => ref !== null);
+	await ctx.db
+		.update(leads)
+		.set({
+			score: input.score,
+			scoreReasoning: input.reasoning,
+			scoreSourceRefs: sourceRefs,
+			stage: "scored",
+		})
+		.where(eq(leads.id, ctx.state.leadId));
+	await setStage(ctx, "scored");
+	ctx.state.scoreSet = true;
+	return ok({ score: input.score });
+}
+
 async function handleWriteDraft(
 	ctx: RunContext,
 	input: z.infer<typeof writeDraftInputSchema>,
@@ -612,6 +903,13 @@ async function handleWriteDraft(
 		return err(
 			"write_draft requires a verified contact — call enrich_contact first.",
 		);
+	}
+	// T-010/T-011 gates: draft only from a saved value prop and a set score.
+	if (!ctx.state.valuePropIntelId) {
+		return err("write_draft requires a saved value prop — call save_value_prop first.");
+	}
+	if (!ctx.state.scoreSet) {
+		return err("write_draft requires a score — call set_score first.");
 	}
 
 	const [draft] = await ctx.db
@@ -629,6 +927,11 @@ async function handleWriteDraft(
 				leadId: ctx.state.leadId,
 				signalId: ctx.state.selectedSignalId,
 				contactId: ctx.state.contactId,
+				committeeContactIds: ctx.state.committeeContactIds,
+				valuePropIntelId: ctx.state.valuePropIntelId,
+				culturalIntelId: ctx.state.culturalIntelId,
+				psychologyIntelId: ctx.state.psychologyIntelId,
+				competitorIntelId: ctx.state.competitorIntelId,
 				playbookMarket: ctx.account.market,
 				productContext: true,
 				usage: ctx.state.lastUsage,

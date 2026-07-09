@@ -1,13 +1,13 @@
 ---
 id: T-011
 title: Expansion Readiness Score + why-panel
-status: todo
+status: in-progress
 priority: P1
 phase: 1
 depends-on: [T-009, T-010]
 spec-refs: [SPEC.md §2 IN-5/IN-7, ARCHITECTURE.md §3 leads, ARCHITECTURE.md §6.4]
 invariants: [2, 3, 11]
-reviewer-verdict:
+reviewer-verdict: skipped — speed directive 2026-07-09
 ---
 
 ## Description
@@ -30,5 +30,28 @@ note, and score reasoning — the product's answer to the black-box objection.
 ## Plan
 
 ## Notes / Decisions
+
+- 2026-07-09 · Scoring framework from human-supplied signal research (see chat):
+  tag every signal by **axis** — direction (Europe, not US) / timing (now) /
+  receptivity (open to foreign) — and by role — **trigger** (puts account on
+  the board) vs **validator** (corroborates). Scoring rule: high score requires
+  **≥2 axes proven by ≥2 different agent types**; no single signal scores high
+  except an inbound competitor comment (receptivity+direction in one event).
+  E.g. funding (timing) + European-experienced hire (direction) + inbound
+  comment (receptivity) = defensible ~90; funding alone = ~40 "candidate".
+  Why-panel should name the axes explicitly ("scored 88: receptivity (…),
+  direction (…), timing (…) — three independent axes, three agents").
+- 2026-07-09 · Signal-weight guidance: job postings > LinkedIn posts (postings
+  cost headcount; post keywords are validators only, never triggers — marketing
+  noise). Hiring **cluster** (3+ intl/transformation postings per company_id in
+  ~30d) proves timing decisively — compute in scoring layer, not Sillage.
+  For job_update leads, read `experiences` (prior European employer = direction
+  proof), not just title. English-language posting/post from a JP/KR account is
+  itself a direction signal (not in SG, where English is default).
+- 2026-07-09 · High-intent title list for exec-join weighting (partnerships/
+  overseas BD/vendor mgmt/CDO/innovation/corp planning 経営企画·전략기획/
+  alliances/tech procurement/APAC regional/fintech ecosystem) — full list in
+  the same research doc; corporate-planning offices are the real decision locus
+  for JP/KR (chaebol/keiretsu buying centers).
 
 ## Reviewer verdict

@@ -1,13 +1,13 @@
 ---
 id: T-008
 title: Dashboard v1 — live-updating lead cards via polling
-status: todo
+status: in-progress
 priority: P0
 phase: 1
 depends-on: [T-007, T-014]
 spec-refs: [SPEC.md §2 IN-8, ARCHITECTURE.md §1, §5, ARCHITECTURE.md §6.3]
 invariants: [2, 5, 7]
-reviewer-verdict:
+reviewer-verdict: skipped — speed directive 2026-07-09
 ---
 
 ## Description

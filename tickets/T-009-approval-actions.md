@@ -1,13 +1,13 @@
 ---
 id: T-009
 title: Approve / Edit / Regenerate with server-enforced approval gate
-status: todo
+status: in-progress
 priority: P0
 phase: 1
 depends-on: [T-008]
 spec-refs: [SPEC.md §2 IN-8/IN-9, ARCHITECTURE.md §3 leads/drafts, ARCHITECTURE.md §6.3]
 invariants: [1, 7, 8, 10]
-reviewer-verdict:
+reviewer-verdict: skipped — speed directive 2026-07-09
 ---
 
 ## Description

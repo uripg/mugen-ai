@@ -1,5 +1,6 @@
 import { requireSession } from "@/lib/auth/session";
 import { SignOutButton } from "@/components/SignOutButton";
+import { Dashboard } from "@/components/dashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -23,10 +24,7 @@ export default async function DashboardPage() {
 				</div>
 			</header>
 			<section className="p-6">
-				<p className="text-sm text-muted-foreground">
-					Dashboard shell (T-002). Lead cards arrive with the pipeline
-					tickets.
-				</p>
+				<Dashboard />
 			</section>
 		</main>
 	);

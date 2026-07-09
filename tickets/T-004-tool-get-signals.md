@@ -98,6 +98,26 @@ Uncertainties & resolutions:
   agent, but WHICH European competitor companies to watch is the team's
   business call (persona/product not in scope for the agent to invent) →
   flagged to human in MEMORY.md, not created unilaterally.
+- 2026-07-09 · **RESOLVED (15:05Z): human supplied verified EU vendor list** →
+  created competitor agent #2745 "EU vendor engagement — mugen-ai"
+  (watchlist #131: Thought Machine, Mambu, ComplyAdvantage, Fenergo, Quantexa,
+  additiv — all 6 resolved by LinkedIn URL, 0 errors). Runs #1403/#1404
+  (90d) and #1407/#1408 (180d max lookback) all completed: **0 detections** —
+  no public engagement between the 12 accounts and these vendors in the window.
+  Honest empty; agent stays enabled for ongoing monitoring. Signal type 3
+  infra is now fully wired (agent → competitorInbound/OutboundComment →
+  get_signals mapping) and will surface if/when engagement occurs.
+- 2026-07-09 · **Optimisation pass (15:08Z, human-supplied keyword research):**
+  #2680 keywords widened 6 → 30 (vendor mgmt/partnerships/core-banking/
+  procurement terms + JP/KR native-script 海外事業·経営企画·글로벌·해외사업 etc.;
+  multi-word phrases quoted for exact match; deliberately excluded: bare API,
+  APAC, regulatory/compliance/MAS — noise at financial accounts). Rerun
+  produced 100+ new detections (first page all UOB). Created keyword_detection
+  agent #2746 "Expansion-intent posts — mugen-ai" (15 quoted phrases) → 7
+  detections incl. Nium CMO "global expansion" post (Circle partnership).
+  ⚠️ #2746's `keywordDetection` type is NOT in get_signals' four-type map →
+  dropped by pipeline by design (invariant 12). Workspace-side corroboration
+  only unless SPEC adds a type; scoring guidance recorded in T-011 notes.
 - 2026-07-09 · **LIVE RESULT (runs #1051/#1052 completed 13:49Z): 340 real
   detections workspace-wide.** Tool exercised live against 5 Q-4 accounts:
   DBS 41 signals persisted, MUFG 167, Nium 28, Money Forward 1, Toss Bank 0

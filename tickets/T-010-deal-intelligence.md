@@ -1,13 +1,13 @@
 ---
 id: T-010
 title: Deal Intelligence layer — committee, playbook notes, competitor, repositioning
-status: todo
+status: in-progress
 priority: P1
 phase: 1
 depends-on: [T-006, T-007]
 spec-refs: [SPEC.md §2 IN-4/IN-6, ARCHITECTURE.md §3 deal_intel/playbooks, ARCHITECTURE.md §6.4]
 invariants: [2, 4, 5, 9, 12]
-reviewer-verdict:
+reviewer-verdict: skipped — speed directive 2026-07-09
 ---
 
 ## Description

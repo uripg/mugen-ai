@@ -70,12 +70,18 @@ export const contacts = sqliteTable(
 		// is NOT NULL); `verified` records the provider's verification state and
 		// must be set explicitly — no default, so no silent "verified" claims.
 		verified: integer("verified", { mode: "boolean" }).notNull(),
+		// Extended labels match the playbook committeeRoleHeuristics (T-010).
 		committeeRole: text("committee_role", {
 			enum: [
 				"champion",
 				"economic-buyer",
 				"technical-evaluator",
 				"executive-sponsor",
+				"strategic-evaluator",
+				"commercial-evaluator",
+				"gatekeeper",
+				"senior-sponsor",
+				"market-entry-scout",
 			],
 		}),
 		sourceTool: text("source_tool").notNull().default("enrich_contact"),
