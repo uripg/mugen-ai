@@ -7,27 +7,23 @@
 
 ## Current phase
 
-**Ratified 2026-07-09 → Phase-1 tickets cut (T-001..T-013), reviewer plan review
-addressed. Awaiting human review of the ticket plan (LOOP.md §2.1.7) + answers in
-`QUESTIONS.md`.** `SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` and
-read-only.
+**Main loop running (plan approved 2026-07-09 with testing-reduction amendment).**
+`SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` (amended twice by human
+decision: testing reduced; shadcn-exclusive UI).
 
-**Next action:** human reviews the ticket plan in `tickets/` and (in parallel or
-after) answers `QUESTIONS.md` (Q-1 remainder: Sillage/FullEnrich keys + spend
-authorization; Q-3 playbooks; Q-4 spot-check companies). Then run the loop → main
-loop starts at T-001 (unblocked: T-001, T-002, T-003 need no pending answers).
+**Board:** T-001, T-002, T-003, T-014 **done** · T-004..T-013 todo.
+Playbooks (Q-3) transcribed to `src/lib/playbooks/`. App live at
+https://mugen-ai.kedalen.dev behind the shared team login.
 
 ## Active ticket
 
-T-003 **done** (reviewer PASS round 3). All 7 app tables live in D1 (local +
-remote), provenance columns throughout, score⇄reasoning CHECK enforced. App
-accounts table renamed **`target_accounts`** (better-auth owns `accounts`).
-
-**Next: T-004 (get_signals) + T-005 (enrich_contact)** — both now *startable*
-(T-003 done, keys in `.dev.vars`) but *not completable* without QUESTIONS.md
-**Q-4** (spot-check companies to run live calls against) and ideally the
-Sillage/FullEnrich API doc links (QUESTIONS.md Q-1 optional items). T-010/T-012
-still gated on **Q-3** (playbooks). Board: T-001..T-003 done; T-004..T-013 todo.
+None in progress. **Next: T-004 (get_signals) + T-005 (enrich_contact)** — gated
+only on QUESTIONS.md **Q-4** (the three spot-check companies; also confirm the
+Q-1 spend checkbox). Sillage/FullEnrich doc links would speed T-004/T-005 API
+verification. After those: T-007 core pipeline (SG) → T-008 dashboard.
+Note for T-010: the human playbooks use committee-role labels beyond the
+contacts.committeeRole enum (strategic evaluator, commercial evaluator/gatekeeper,
+market-entry scout, senior sponsor) — extend the enum or map at intel time.
 
 ## Decisions log
 
@@ -102,8 +98,10 @@ still gated on **Q-3** (playbooks). Board: T-001..T-003 done; T-004..T-013 todo.
 - Next 16: `next lint` removed — lint = `eslint .` with flat
   eslint-config-next imports (T-001 note). Gates: `bun run typecheck` / `lint` /
   `build`.
-- Secrets local: `.dev.vars` (gitignored) — has `CLAUDE_API_KEY`,
-  `BETTER_AUTH_SECRET`; missing Sillage/FullEnrich (Q-1 remainder). Prod: Worker
-  secrets via `wrangler secret put` (not yet set).
-- No `typecheck`/`test` scripts yet — added in the skeleton ticket per AGENTS.md §6
-  gates.
+- Secrets local: `.dev.vars` (gitignored) — `CLAUDE_API_KEY`,
+  `BETTER_AUTH_SECRET`, `SILLAGE_API_KEY`, `FULLENRICH_API_KEY`, plus the shared
+  team login (`TEAM_LOGIN_EMAIL`/`TEAM_LOGIN_PASSWORD`). Prod Worker secrets:
+  only `BETTER_AUTH_SECRET` set so far; the three API keys go up via
+  `wrangler secret put` with the pipeline tickets.
+- UI: shadcn/ui EXCLUSIVELY via the shadcn CLI (hard requirement) — components.json
+  at repo root, components in `src/components/ui/`.
