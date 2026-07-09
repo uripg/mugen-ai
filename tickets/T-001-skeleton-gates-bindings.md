@@ -17,15 +17,15 @@ and the app live at mugen-ai.kedalen.dev. IDEA.md: hit the stack's rough edges i
 the first 30 minutes, not the last.
 
 ## Acceptance criteria
-- [ ] `bun run typecheck` (`tsc --noEmit`) and `bun run test` (vitest, ratified dev
-      dep) scripts exist and pass (AGENTS.md §6 gates)
+- [ ] `bun run typecheck` (`tsc --noEmit`) script exists and passes (AGENTS.md §6
+      gates; no test suite — testing radically reduced per 2026-07-09 decision)
 - [ ] D1 database + KV namespace created via wrangler and bound in `wrangler.jsonc`;
       `bun run cf-typegen` regenerated
 - [ ] `initOpenNextCloudflareForDev()` in `next.config.ts`; local dev reaches D1/KV
       bindings; secrets only in `.dev.vars` (invariant 6 — grep clean)
 - [ ] `bun run deploy` succeeds; app responds at https://mugen-ai.kedalen.dev
       (deploy pre-authorized at ratification)
-- [ ] type-check / lint / test pass; `bun run build` (smoke) passes
+- [ ] type-check / lint pass; `bun run build` (smoke) passes
 - [ ] wrangler/OpenNext config options verified against current docs
 
 ## Plan

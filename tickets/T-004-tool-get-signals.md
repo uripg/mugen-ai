@@ -30,8 +30,7 @@ first, but the ticket is not done until it has returned real signals.
       explicit runs, bounded retries (invariant 10)
 - [ ] Empty/thin results surface honestly as empty — never padded (invariant 2)
 - [ ] Live call returns real signals for at least one Q-4 account
-- [ ] type-check / lint / test / build pass; mapping/validation unit-tested with
-      injected fixtures (AGENTS.md §7)
+- [ ] type-check / lint / build pass
 
 ## Plan
 

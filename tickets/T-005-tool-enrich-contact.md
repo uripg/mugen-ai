@@ -26,8 +26,7 @@ QUESTIONS.md Q-1 remainder (FULLENRICH_API_KEY) and Q-4 for live testing.**
 - [ ] Key server-side only (invariant 6); explicit runs only, bounded retries
       (invariant 10); no PII in logs (invariant 9)
 - [ ] Live call enriches at least one real contact from a Q-4 company
-- [ ] type-check / lint / test / build pass; validation + no-result paths
-      unit-tested with injected fixtures
+- [ ] type-check / lint / build pass
 
 ## Plan
 

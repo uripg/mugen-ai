@@ -31,8 +31,7 @@ start without both, even though T-004/T-005 inherit the same gates.**
 - [ ] Route body zod-validated (invariant 8); session checked server-side
       (invariant 7); paid calls only inside this human-triggered run (invariant 10)
 - [ ] Run completes against the real deployed Worker, not just local
-- [ ] type-check / lint / test / build pass; stage-sequencing logic unit-tested
-      with injected tool stubs (AGENTS.md §7)
+- [ ] type-check / lint / build pass
 
 ## Plan
 

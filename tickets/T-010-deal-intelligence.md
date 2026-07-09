@@ -36,8 +36,7 @@ half as a new ticket rather than stretching this one).
 - [ ] Cut-order fallback works: with notes cut, the team-authored generic line per
       market renders instead (SPEC §2 cut order)
 - [ ] No PII in logs (invariant 9); SG first, JP/KR via T-012 (invariant 12)
-- [ ] type-check / lint / test / build pass; playbook-selection + committee-cap
-      logic unit-tested with injected fixtures
+- [ ] type-check / lint / build pass
 
 ## Plan
 

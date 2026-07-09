@@ -25,7 +25,7 @@ human approves one.
 - [ ] Approve moment works live: draft → approved → sent-simulated (invariant 1)
 - [ ] Degraded states presentable if a live API is slow/empty on stage (honest
       empty states, not blanks)
-- [ ] type-check / lint / test / build pass
+- [ ] type-check / lint / build pass
 
 ## Plan
 

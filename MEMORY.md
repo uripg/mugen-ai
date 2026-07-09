@@ -55,6 +55,13 @@ None (decomposition phase).
   2/5 on T-008, regenerate-is-paid-run on T-009 w/ invariants 8/10, T-011→T-012
   typo in T-010) + scope-guard notes on T-003/T-010.
 
+- 2026-07-09 · **Human decision at plan review: testing radically reduced for
+  iteration speed** — vitest dropped, no unit-test suite in Phase 1, test gate
+  removed from AGENTS.md §6 table and all tickets; verification = typecheck + lint
+  + build + exercising the change live. (Human-authorized amendment to the
+  ratified AGENTS.md/ARCHITECTURE.md test slots.) Plan otherwise approved → main
+  loop started.
+
 ## Blocking questions (awaiting the human)
 
 <!-- Q-N · <question, why it blocks, options, recommendation> · asked <date> -->

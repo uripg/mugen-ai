@@ -25,8 +25,7 @@ note, and score reasoning — the product's answer to the black-box objection.
       traceable to its source row/tool
 - [ ] Renders correctly in the degraded states: no verified contact, no committee
       member, competitor note cut, fallback playbook line
-- [ ] type-check / lint / test / build pass; score-assembly logic unit-tested with
-      injected fixtures (AGENTS.md §7)
+- [ ] type-check / lint / build pass
 
 ## Plan
 

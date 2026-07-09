@@ -27,8 +27,7 @@ human-triggered paid run: bounded retries, spend gate, zod-validated body
       version (history kept), both auth-gated (invariant 7)
 - [ ] Invalid transitions rejected server-side (e.g. approve an already-sent lead)
 - [ ] All states survive refresh and re-login
-- [ ] type-check / lint / test / build pass; state machine unit-tested (AGENTS.md
-      §7 — permission/transition decisions are deterministic core)
+- [ ] type-check / lint / build pass
 
 ## Plan
 

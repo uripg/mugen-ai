@@ -22,7 +22,7 @@ market on the deployed URL. **Gated on QUESTIONS.md Q-3 and Q-4 for JP/KR.**
 - [ ] Thin data in any market surfaces honestly (invariant 2) — demo expectations
       set from Q-4's spot-check notes, not padded
 - [ ] Still JP/KR/SG only — no generic market plumbing added (invariant 12)
-- [ ] type-check / lint / test / build pass
+- [ ] type-check / lint / build pass
 
 ## Plan
 

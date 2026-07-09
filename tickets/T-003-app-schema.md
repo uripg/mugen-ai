@@ -24,8 +24,7 @@ review): schema + deterministic helpers ONLY — no routes, no UI.
 - [ ] `leads.score_reasoning` is structurally required whenever `score` is set
 - [ ] Migration applies cleanly to local and remote D1
 - [ ] No PII in any log statement added (invariant 9)
-- [ ] type-check / lint / test / build pass; unit tests for any state-transition
-      helpers (draft → approved/edited → sent-simulated)
+- [ ] type-check / lint / build pass
 
 ## Plan
 

@@ -27,8 +27,7 @@ first.**
       (invariant 2); empty findings surface as "none found", not filler
 - [ ] Key server-side only (invariant 6); explicit runs only, bounded
       searches/retries (invariant 10)
-- [ ] type-check / lint / test / build pass; response-shaping unit-tested with
-      injected fixtures
+- [ ] type-check / lint / build pass
 
 ## Plan
 

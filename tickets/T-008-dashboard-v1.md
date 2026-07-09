@@ -24,8 +24,7 @@ DESIGN.md**.
 - [ ] Page + read endpoint session-checked server-side (invariant 7)
 - [ ] Pipeline stages, contact ("no verified contact" included), and draft body
       render honestly from persisted data — no placeholder/mock content
-- [ ] type-check / lint / test / build pass; deployed and verified at
-      mugen-ai.kedalen.dev
+- [ ] type-check / lint / build pass
 
 ## Plan
 

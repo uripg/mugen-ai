@@ -102,7 +102,9 @@ These are the load-bearing laws of the system. A change that violates one is a
 - **External services:** Sillage V2 (signals), FullEnrich (contact enrichment) —
   keys as Worker secrets / `.dev.vars`.
 - **Validation:** zod at every boundary (route bodies + third-party responses).
-- **Tests:** vitest; deterministic core only, external services injected (§7).
+- **Tests:** radically reduced by human decision 2026-07-09 (iteration speed):
+  no unit-test suite / no vitest; §7 applies only if a test is ever added.
+  Verification = gates + exercising the change on the live deployment.
 - **Lint/format:** ESLint (scaffold config). Tailwind CSS 4 (scaffold) for UI.
 - **Package manager:** bun.
 - **Env files:** local secrets in gitignored `.dev.vars` only — `.env.local` is
@@ -201,7 +203,7 @@ recommendation — answerable in one reply.
   |---|---|
   | type-check | `bun run typecheck` (`tsc --noEmit`; script added in the skeleton ticket) |
   | lint | `bun run lint` |
-  | test | `bun run test` (vitest; script added when vitest lands) |
+  | test | — (testing radically reduced by human decision 2026-07-09 for iteration speed; vitest dropped. Verification = type-check + lint + build + exercising the change live) |
   | smoke | `bun run build` (Next.js production build compiles) |
 - [ ] Platform APIs used were verified against current docs.
 - [ ] Any optional loop `TOOLBOX.md` declares for this kind of change (e.g. a UI

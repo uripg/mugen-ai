@@ -27,7 +27,7 @@ TTL ≥ 60s.
 - [ ] `BETTER_AUTH_SECRET` never client-side (invariant 6 — bundle grep clean)
 - [ ] Drizzle schema/migrations path established (auth tables migrated)
 - [ ] Deployed and verified at mugen-ai.kedalen.dev
-- [ ] type-check / lint / test / build pass
+- [ ] type-check / lint / build pass
 - [ ] better-auth + better-auth-cloudflare APIs verified against current docs
 
 ## Plan

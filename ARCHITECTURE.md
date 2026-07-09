@@ -72,7 +72,7 @@ CONSTRAINTS.md sign-off for adding them]**:
 | `drizzle-orm` + `drizzle-kit` (dev) | The better-auth-cloudflare template's schema/migration path for D1; also used for our own tables. **[agent-proposed]** — beats hand-rolled SQL migrations for a one-day build. |
 | `@anthropic-ai/sdk` | The agent pipeline: Claude tool-use loop + the native `web_search` server tool. |
 | `zod` | Validate all external input at the boundary: API route bodies and Sillage/FullEnrich responses. |
-| `vitest` (dev) | Test gate (AGENTS.md §6/§7) for the deterministic core (validation, score-assembly, approval-state transitions) with external services injected. **[agent-proposed]** |
+| ~~`vitest` (dev)~~ | Dropped 2026-07-09 by human decision at plan review — testing radically reduced for iteration speed; no unit-test suite in Phase 1. |
 
 **Model [agent-proposed]:** the pipeline uses a current Claude model via the
 Anthropic API; exact model id chosen at implementation time against current docs
