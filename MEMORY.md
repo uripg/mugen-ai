@@ -11,16 +11,14 @@
 `SPEC.md`, `ARCHITECTURE.md`, `AGENTS.md` are `RATIFIED` (amended twice by human
 decision: testing reduced; shadcn-exclusive UI).
 
-**Board:** T-001, T-002, T-003, T-014 **done** · T-004..T-013 todo.
+**Board:** T-001..T-004, T-014 **done** · T-005..T-013 todo.
 Playbooks (Q-3) transcribed to `src/lib/playbooks/`. App live at
 https://mugen-ai.kedalen.dev behind the shared team login.
 
 ## Active ticket
 
-None in progress. **Next: T-004 (get_signals) + T-005 (enrich_contact)** — gated
-only on QUESTIONS.md **Q-4** (the three spot-check companies; also confirm the
-Q-1 spend checkbox). Sillage/FullEnrich doc links would speed T-004/T-005 API
-verification. After those: T-007 core pipeline (SG) → T-008 dashboard.
+None in progress. **Next: T-005 (enrich_contact — FullEnrich client).** After
+that: T-006 research_market → T-007 core pipeline (SG) → T-008 dashboard.
 Note for T-010: the human playbooks use committee-role labels beyond the
 contacts.committeeRole enum (strategic evaluator, commercial evaluator/gatekeeper,
 market-entry scout, senior sponsor) — extend the enum or map at intel time.
@@ -75,7 +73,34 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   `wrangler secret put` itself — done; all 4 secrets live on the Worker
   (SILLAGE_API_KEY, FULLENRICH_API_KEY, CLAUDE_API_KEY, BETTER_AUTH_SECRET).
 
+- 2026-07-09 · **T-004 done** (reviewer PASS after 1 fix round). Canonical
+  Sillage doc = in-repo `SILLAGE_API.md`. Design: resolve account → workspace
+  company id via TAL (cached in `target_accounts.sillage_id`, ids
+  130411–130422 all resolved), `POST /v2/workspace/signals/query` unfiltered
+  (v2 `type` filter omits deepSearch/jobPosting), deterministic client-side
+  mapping to the 4 SPEC types, raw-payload provenance, dedupe on detection id.
+  Created Sillage agent #2680 `job_posting_keyword_detection`
+  ("Intl/Europe-facing hiring — mugen-ai", keywords from SPEC §2.3) alongside
+  existing job_update #2553; runs #1051/#1052 → 340 live detections; tool
+  persisted DBS 41 / MUFG 167 / Nium 28 / MoneyForward 1 / Toss 0 (honest
+  empty) into LOCAL D1. Notes: Sillage emits duplicate detections per posting
+  (dedupe-for-display deferred to T-007/T-008); signal-type coverage today =
+  hiring + exec-join only (see open items below).
+
 ## Blocking questions (awaiting the human)
+
+**Non-blocking items for the human (build continues):**
+- Competitor-engagement signals need a Sillage **competitor watchlist agent**,
+  but WHICH European competitor companies to watch is the team's business
+  call — tell me the list (or add the agent in the Sillage UI) and T-007+ will
+  surface those signals. Funding signals: deepSearch agents aren't creatable
+  via the API — if the Sillage UI offers a Deep Search agent, enabling it adds
+  funding coverage; the tool already maps both types.
+- Sillage workspace is shared & churning: someone's "KFTC" add resolved to
+  "Kentuckians For The Commonwealth" (kftc.org) — wrong company, worth
+  removing in the UI. Also the 8 SaaS accounts (Rippling, Asana, …) from
+  earlier experiments were replaced on the TAL at ~13:45Z by parties unknown —
+  coordinate with teammates so our 12 banks stay on the list.
 
 <!-- Q-N · <question, why it blocks, options, recommendation> · asked <date> -->
 - ~~Q-1 (remainder)~~ **RESOLVED 2026-07-09**: human added `SILLAGE_API_KEY` and
@@ -86,9 +111,14 @@ market-entry scout, senior sponsor) — extend the enum or map at intel time.
   cultural buying-process notes, buyer psychology notes, committee-role
   heuristics + one generic fallback line per market. Blocks: the Deal Intelligence
   tickets only. · asked 2026-07-09
-- **Q-4 · PARTIALLY RESOLVED 2026-07-09**: human added 12 fintech/banking accounts to Sillage (pasted Top Accounts screen); seeded to target_accounts local+remote (scripts/seed-accounts.sql; 3 JP, 4 KR, 5 SG). Sillage mapping status was still QUEUING — no signals yet; FullEnrich spot-check results not reported. Note: Tokio Marine Insurance Group (Asia) classified as sg (regional HQ Singapore) — human to correct if wrong. Still open: Sillage mapping completion + FullEnrich spot-check note; API doc links optional. · asked 2026-07-09
-- **HOLD (human, 2026-07-09):** after secrets were set, human said "hold" — do
-  NOT proceed to T-004+ until the human says continue.
+- **Q-4 · Sillage half RESOLVED 2026-07-09**: mapping completed; all 12 banks
+  `found` on the TAL and real signals verified live (T-004). Note: Tokio
+  Marine Insurance Group (Asia) classified as sg (regional HQ Singapore) —
+  human to correct if wrong. **Still open: FullEnrich spot-check note**
+  (blocks nothing until T-005's live-test criterion; T-005 client can be
+  built first). · asked 2026-07-09
+- ~~HOLD~~ **LIFTED 2026-07-09**: human confirmed via /loop prompt — proceed to
+  T-004/T-005. (Was: after secrets were set, human said "hold".)
 
 ## Env / setup notes
 
